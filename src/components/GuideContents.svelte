@@ -8,6 +8,8 @@
 	export let prevent_sidebar_scroll = false;
 
 	let ul;
+	let showSubsection = false;
+
 
 	afterUpdate(() => {
 		// bit of a hack — prevent sidebar scrolling if
@@ -15,6 +17,24 @@
 		if (prevent_sidebar_scroll || show_contents && window.innerWidth < 832) return;
 
 		const active = ul.querySelector('.active');
+
+		console.log(sections);
+		console.log(active_section);
+
+		for(let i = 0; i < sections.length; i++) {
+			if (sections[i].slug === active_section) {
+				console.log("FOUND", sections[i].slug);
+				console.log("FOUND", active_section);
+				for(let j = 0; j < sections[i].subsections.length; j++) {
+
+				}
+
+			}
+
+
+
+		}
+
 
 		if (active) {
 			const { top, bottom } = active.getBoundingClientRect();
@@ -118,23 +138,26 @@
 				{/if}
 			</a>
 
-			{#each section.subsections as subsection}
-				<!-- see <script> below: on:click='scrollTo(event, subsection.slug)' -->
-				<a
-					class="subsection"
-					class:active="{subsection.slug === active_section}"
-					href="docs#{subsection.slug}"
-					data-level="{subsection.level}"
-				>
-					{@html subsection.title}
+			{#if showSubsection}
 
-					{#if subsection.slug === active_section}
-						<div class="icon-container">
-							<Icon name="arrow-right" />
-						</div>
-					{/if}
-				</a>
-			{/each}
+				{#each section.subsections as subsection}
+					<!-- see <script> below: on:click='scrollTo(event, subsection.slug)' -->
+					<a
+						class="subsection"
+						class:active="{subsection.slug === active_section}"
+						href="docs#{subsection.slug}"
+						data-level="{subsection.level}"
+					>
+						{@html subsection.title}
+
+						{#if subsection.slug === active_section}
+							<div class="icon-container">
+								<Icon name="arrow-right" />
+							</div>
+						{/if}
+					</a>
+				{/each}
+			{/if}
 		</li>
 	{/each}
 </ul>
