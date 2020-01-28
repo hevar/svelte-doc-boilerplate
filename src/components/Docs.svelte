@@ -31,6 +31,8 @@
 
 		let last_id = getFragment();
 
+		console.log("------------->",last_id);
+
 		const onscroll = () => {
 			const top = -window.scrollY;
 

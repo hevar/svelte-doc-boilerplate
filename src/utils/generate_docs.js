@@ -106,7 +106,7 @@ export default function generate_docs(dir) {
 							return `.${$1}`;
 						});
 
-					subsections.push({ slug, title, level });
+					subsections.push({ slug, title, level, parent: section_slug });
 				}
 
 				return `

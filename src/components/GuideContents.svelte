@@ -8,7 +8,10 @@
 	export let prevent_sidebar_scroll = false;
 
 	let ul;
-	let showSubsection = false;
+	let acta = null;
+
+	let shouldShow = false;
+	let parent = "";
 
 
 	afterUpdate(() => {
@@ -20,20 +23,32 @@
 
 		console.log(sections);
 		console.log(active_section);
+		console.log(".....",acta);
 
-		for(let i = 0; i < sections.length; i++) {
-			if (sections[i].slug === active_section) {
-				console.log("FOUND", sections[i].slug);
-				console.log("FOUND", active_section);
-				for(let j = 0; j < sections[i].subsections.length; j++) {
+		for (let i = 0; i < sections.length; i++) {
+			const arr = sections[i].subsections;
 
-				}
+			const arr2 = [];
 
-			}
-
-
+			arr.forEach(element => arr2.push(element.slug));
 
 		}
+
+
+
+		//for (let i = 0; i < sections.length; i++) {
+		//	console.log("a:",sections[i].slug);
+		//	if (sections[i].slug === active_section) {
+		//		acta = sections[i].slug;
+		//	}
+		//	for (let j = 0; sections[i].subsections.length; j++) {
+		//		console.log("--a--",sections[i].subsections[j]);
+
+		//	}
+		//}
+
+
+
 
 
 		if (active) {
@@ -138,10 +153,11 @@
 				{/if}
 			</a>
 
-			{#if showSubsection}
+			{#if shouldShow}
 
 				{#each section.subsections as subsection}
-					<!-- see <script> below: on:click='scrollTo(event, subsection.slug)' -->
+				<!-- see <script> below: on:click='scrollTo(event, subsection.slug)' -->
+
 					<a
 						class="subsection"
 						class:active="{subsection.slug === active_section}"
@@ -151,6 +167,7 @@
 						{@html subsection.title}
 
 						{#if subsection.slug === active_section}
+							{parent = subsection.parent}
 							<div class="icon-container">
 								<Icon name="arrow-right" />
 							</div>
@@ -158,6 +175,9 @@
 					</a>
 				{/each}
 			{/if}
+
+
+
 		</li>
 	{/each}
 </ul>
