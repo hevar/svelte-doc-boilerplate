@@ -28,8 +28,8 @@
 
 	<NavItem external="https://svelte.dev">Svelte</NavItem>
 
-	<NavItem external="https://svelte.dev/chat" title="Discord Chat">
-		<Icon name="message-square"/>
+	<NavItem segment="editor">
+		<Icon name="edit"/>
 	</NavItem>
 
 	<NavItem external="https://github.com/sveltejs/sapper" title="GitHub Repo">
