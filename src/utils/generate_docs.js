@@ -95,7 +95,8 @@ export default function generate_docs(dir) {
 			};
 
 			renderer.heading = (text, level, rawtext) => {
-				const slug = level <= 4 && make_slug(rawtext);
+				const child_slug = level <= 4 && make_slug(rawtext);
+				const slug = `${child_slug}___${section_slug}`;
 
 				if (level === 3 || level === 4) {
 					const title = text
@@ -106,7 +107,7 @@ export default function generate_docs(dir) {
 							return `.${$1}`;
 						});
 
-					subsections.push({ slug, title, level, parent: section_slug });
+					subsections.push({ slug, title, level});
 				}
 
 				return `

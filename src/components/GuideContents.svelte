@@ -4,15 +4,11 @@
 
 	export let sections = [];
 	export let active_section = null;
+	export let active_section_parent = null;
 	export let show_contents;
 	export let prevent_sidebar_scroll = false;
 
 	let ul;
-	let acta = null;
-
-	let shouldShow = false;
-	let parent = "";
-
 
 	afterUpdate(() => {
 		// bit of a hack — prevent sidebar scrolling if
@@ -20,36 +16,6 @@
 		if (prevent_sidebar_scroll || show_contents && window.innerWidth < 832) return;
 
 		const active = ul.querySelector('.active');
-
-		console.log(sections);
-		console.log(active_section);
-		console.log(".....",acta);
-
-		for (let i = 0; i < sections.length; i++) {
-			const arr = sections[i].subsections;
-
-			const arr2 = [];
-
-			arr.forEach(element => arr2.push(element.slug));
-
-		}
-
-
-
-		//for (let i = 0; i < sections.length; i++) {
-		//	console.log("a:",sections[i].slug);
-		//	if (sections[i].slug === active_section) {
-		//		acta = sections[i].slug;
-		//	}
-		//	for (let j = 0; sections[i].subsections.length; j++) {
-		//		console.log("--a--",sections[i].subsections[j]);
-
-		//	}
-		//}
-
-
-
-
 
 		if (active) {
 			const { top, bottom } = active.getBoundingClientRect();
@@ -153,7 +119,7 @@
 				{/if}
 			</a>
 
-			{#if shouldShow}
+			{#if active_section_parent === section.slug || active_section === section.slug }
 
 				{#each section.subsections as subsection}
 				<!-- see <script> below: on:click='scrollTo(event, subsection.slug)' -->
@@ -167,7 +133,6 @@
 						{@html subsection.title}
 
 						{#if subsection.slug === active_section}
-							{parent = subsection.parent}
 							<div class="icon-container">
 								<Icon name="arrow-right" />
 							</div>

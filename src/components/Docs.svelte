@@ -11,6 +11,7 @@
 	export let edit_title = 'edit this section';
 	export let sections;
 	let active_section;
+	let active_section_parent;
 
 	let container;
 	let aside;
@@ -31,7 +32,6 @@
 
 		let last_id = getFragment();
 
-		console.log("------------->",last_id);
 
 		const onscroll = () => {
 			const top = -window.scrollY;
@@ -40,10 +40,16 @@
 			while (i--) {
 				if (positions[i] + top < 40) {
 					const anchor = anchors[i];
+
 					const { id } = anchor;
+
+					let parentSection = id.match(/___(.*)/);
 
 					if (id !== last_id) {
 						active_section = id;
+						if (parentSection && parentSection.length > 0) {
+							active_section_parent = parentSection[1];
+						}
 						last_id = id;
 					}
 
@@ -399,7 +405,7 @@
 
 <aside bind:this={aside} class="sidebar-container" class:open={show_contents}>
 	<div class="sidebar" on:click="{() => show_contents = false}"> <!-- scroll container -->
-		<GuideContents {sections} {active_section} {show_contents} />
+		<GuideContents {sections} {active_section_parent} {active_section} {show_contents} />
 	</div>
 
 	<button on:click="{() => show_contents = !show_contents}">
