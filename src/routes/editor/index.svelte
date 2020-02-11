@@ -1,6 +1,7 @@
 <script>
     import marked from 'marked';
-    import { afterUpdate } from 'svelte';
+    import {afterUpdate} from 'svelte';
+    import Icon from "../../components/Icon.svelte";
 
     let textpos;
     let value = `
@@ -25,10 +26,19 @@
 `;
 
     let save;
+    let fileName;
 
-    function handleKeyup(event) {
+    marked.setOptions({
+        highlight: function(code, lang, callback) {
+            require('pygmentize-bundled') ({ lang: lang, format: 'html' }, code, function (err, result) {
+                callback(err, result.toString());
+            });
+        }
+    });
 
-        if(save) {
+    function handleKeyup(event){
+
+        if(save){
             clearTimeout(save);
         }
 
@@ -39,14 +49,30 @@
             textpos.select();
             document.execCommand('copy');
             //window.getSelection().removeAllRanges()
-        }, 400);
-
-
+        }, 4000);
     }
 
 
+    function handleSave() {
 
+        fileName = `${fileName}.md`;
 
+        const file = new Blob([value], {type: "text/plain"});
+        if (window.navigator.msSaveOrOpenBlob) // IE10+
+            window.navigator.msSaveOrOpenBlob(file, fileName);
+        else { // Others
+            let a = document.createElement("a");
+            let url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        }
+    }
 
 </script>
 
@@ -76,7 +102,9 @@
         width: 100%;
         height: 100%;
         background: #2d2d2d;
-        color: #ccb50a;
+        font-family: "Courier New", Courier, monospace;
+        color: #ffd449;
+        font-size: 12px;
     }
     .source:focus {
         outline: none;
@@ -85,16 +113,62 @@
         width: 100%;
         padding: 0 2em;
     }
+
+    .float{
+        left: 46%;
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        bottom: 55px;
+        background-color: #0C9;
+        color: #FFF;
+        border-radius: 50px;
+        text-align: center;
+        box-shadow: 2px 2px 3px #252525;
+    }
+
+    .float:hover {
+        background-color: #23a786
+
+    }
+
+    .input-field {
+        padding: 10px 20px;
+        border: 1px solid #999;
+        border-radius: 3px;
+        display: block;
+        width: 20%;
+        box-sizing: border-box;
+        outline: none;
+        margin-left: 10px;
+    }
+
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+    }
+
 </style>
 
 <main class="container">
+    <div class="input-wrapper">
+        <span>File name</span>
+        <input class="input-field" bind:value={fileName} placeholder="04-file-name" />
+    </div>
     <div class="markdown-editor">
         <div class="left-panel">
             <textarea class="source" on:keyup={handleKeyup} bind:this={textpos} bind:value={value}></textarea>
         </div>
 
+        <button class="float" on:click={handleSave}>
+            <Icon name="save" />
+        </button>
+
         <div class="right-panel">
             <div class="output">{@html marked(value)}</div>
         </div>
+
+
     </div>
 </main>
