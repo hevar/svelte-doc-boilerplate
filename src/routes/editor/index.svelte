@@ -25,32 +25,7 @@
 [Svelte](https://svelte.dev/)
 `;
 
-    let save;
     let fileName;
-
-    marked.setOptions({
-        highlight: function(code, lang, callback) {
-            require('pygmentize-bundled') ({ lang: lang, format: 'html' }, code, function (err, result) {
-                callback(err, result.toString());
-            });
-        }
-    });
-
-    function handleKeyup(event){
-
-        if(save){
-            clearTimeout(save);
-        }
-
-        save = setTimeout(() => {
-            console.log("keey up");
-
-            textpos.focus();
-            textpos.select();
-            document.execCommand('copy');
-            //window.getSelection().removeAllRanges()
-        }, 4000);
-    }
 
 
     function handleSave() {
@@ -158,7 +133,7 @@
     </div>
     <div class="markdown-editor">
         <div class="left-panel">
-            <textarea class="source" on:keyup={handleKeyup} bind:this={textpos} bind:value={value}></textarea>
+            <textarea class="source" bind:this={textpos} bind:value={value}></textarea>
         </div>
 
         <button class="float" on:click={handleSave}>
